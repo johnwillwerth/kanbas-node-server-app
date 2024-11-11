@@ -1,12 +1,35 @@
 import express from 'express';
-import Hello from "./Hello.js";      // import Hello from Hello.js
-import Lab5 from "./Lab5/index.js";  // import Lab5
+import Hello from "./Hello.js"; 
+import Lab5 from "./Lab5/index.js"; 
 import cors from "cors";
 import UserRoutes from "./Kanbas/Users/routes.js";
-const app = express()                // create new express instance
-app.use(cors());
+import "dotenv/config";
+import session from 'express-session';                          // import new server session library
+const app = express()                                           // create new express instance
+app.use(
+  cors({                                                        // configure cors first
+    credentials: true,                                          // support cookies
+    origin: process.env.NETLIFY_URL || "http://localhost:3000", // use different front end URL in dev
+  })                                                            // and in production
+);
+
 app.use(express.json());
+
+const sessionOptions = {                                        // default session options
+  secret: process.env.SESSION_SECRET || "kanbas",       
+  resave: false,                                       
+  saveUninitialized: false,                                  
+};
+if (process.env.NODE_ENV !== "development") {                   // in production
+  sessionOptions.proxy = true;                                  // turn on proxy support
+  sessionOptions.cookie = {                                     // configure cookies for remote server
+    sameSite: "none",
+    secure: true,
+    domain: process.env.NODE_SERVER_DOMAIN,
+  };
+}
+app.use(session(sessionOptions));
 UserRoutes(app);
-Lab5(app);                           // pass reference to express module
-Hello(app);                          // pass app reference to Hello
-app.listen(process.env.PORT || 4000) // listen to http://localhost:4000
+Lab5(app);                                                      // pass reference to express module
+Hello(app);                                                     // pass app reference to Hello
+app.listen(process.env.PORT || 4000)                            // listen to http://localhost:4000
