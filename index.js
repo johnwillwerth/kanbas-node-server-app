@@ -3,8 +3,11 @@ import Hello from "./Hello.js";
 import Lab5 from "./Lab5/index.js"; 
 import cors from "cors";
 import UserRoutes from "./Kanbas/Users/routes.js";
+import CourseRoutes from "./Kanbas/Courses/routes.js";
+import ModuleRoutes from "./Kanbas/Modules/routes.js";
 import "dotenv/config";
 import session from 'express-session';                          // import new server session library
+
 const app = express()                                           // create new express instance
 app.use(
   cors({                                                        // configure cors first
@@ -20,6 +23,7 @@ const sessionOptions = {                                        // default sessi
   resave: false,                                       
   saveUninitialized: false,                                  
 };
+
 if (process.env.NODE_ENV !== "development") {                   // in production
   sessionOptions.proxy = true;                                  // turn on proxy support
   sessionOptions.cookie = {                                     // configure cookies for remote server
@@ -28,8 +32,13 @@ if (process.env.NODE_ENV !== "development") {                   // in production
     domain: process.env.NODE_SERVER_DOMAIN,
   };
 }
+
 app.use(session(sessionOptions));
+
 UserRoutes(app);
+CourseRoutes(app);
+ModuleRoutes(app);
 Lab5(app);                                                      // pass reference to express module
 Hello(app);                                                     // pass app reference to Hello
+
 app.listen(process.env.PORT || 4000)                            // listen to http://localhost:4000
