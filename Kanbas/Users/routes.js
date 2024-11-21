@@ -3,6 +3,7 @@ import * as courseDao from "../Courses/dao.js";
 import * as enrollmentsDao from "../Enrollments/dao.js";
 
 export default function UserRoutes(app) {
+
   const createCourse = (req, res) => {
     const currentUser = req.session["currentUser"];
     const newCourse = courseDao.createCourse(req.body);
@@ -10,10 +11,44 @@ export default function UserRoutes(app) {
     res.json(newCourse);
   };
 
-  const createUser = (req, res) => { };
-  const deleteUser = (req, res) => { };
-  const findAllUsers = (req, res) => { };
-  const findUserById = (req, res) => { };
+  const createUser = (req, res) => { 
+    const { userId } = req.params;
+    const user = {
+      ...req.body,
+      user: userId,
+    };
+    const newUser = dao.createUser(user);
+    res.send(newUser);
+  };
+
+  const deleteUser = (req, res) => { 
+    const { userId } = req.params;
+    dao.deleteUser(userId);
+    res.sendStatus(204);
+  };
+
+  const findAllUsers = (req, res) => { 
+    const users = dao.findAllUsers();
+    res.send(users);
+  };
+
+  const findUserById = (req, res) => { 
+    const { userId } = req.params;
+    const user = dao.findUserById(userId);
+    res.send(user);
+  };
+
+  const findUserByUsername = (req, res) => {
+    const { username } = req.params;
+    const user = dao.findUserByUsername(username);
+    res.send(user);
+  };
+  
+  const findUserByCredentials = (req, res) => {
+    const { username, password } = req.body;
+    const user = dao.findUserByCredentials(username, password);
+    res.send(user);
+  };
   
   const updateUser = (req, res) => {
     const userId = req.params.userId;
@@ -23,8 +58,6 @@ export default function UserRoutes(app) {
     req.session["currentUser"] = currentUser;
     res.json(currentUser);
   };
-
-  app.post("/api/users/current/courses", createCourse);
 
   const signup = (req, res) => {
     const user = dao.findUserByUsername(req.body.username);
@@ -76,10 +109,13 @@ export default function UserRoutes(app) {
     res.json(courses);
   };
 
+  app.post("/api/users/current/courses", createCourse);
   app.get("/api/users/:userId/courses", findCoursesForEnrolledUser);
   app.post("/api/users", createUser);
   app.get("/api/users", findAllUsers);
   app.get("/api/users/:userId", findUserById);
+  app.get("/api/users/:username", findUserByUsername);
+  app.get("/api/users/credentials", findUserByCredentials);
   app.put("/api/users/:userId", updateUser);
   app.delete("/api/users/:userId", deleteUser);
   app.post("/api/users/signup", signup);
