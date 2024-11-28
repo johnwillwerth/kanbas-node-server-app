@@ -5,72 +5,72 @@ import * as enrollmentsDao from "../Enrollments/dao.js";
 
 export default function CourseRoutes(app) {
   
-  const findAllCourses = (req, res) => {
-    const courses = dao.findAllCourses();
+  const findAllCourses = async (req, res) => {
+    const courses = await dao.findAllCourses();
     res.send(courses);
   };
   
-  const updateCourse = (req, res) => {
+  const updateCourse = async (req, res) => {
     const { courseId } = req.params;
     const courseUpdates = req.body;
-    dao.updateCourse(courseId, courseUpdates);
+    await dao.updateCourse(courseId, courseUpdates);
     res.sendStatus(204);
   };
 
-  const deleteCourse = (req, res) => {
+  const deleteCourse = async (req, res) => {
     const { courseId } = req.params;
-    dao.deleteCourse(courseId);
+    await dao.deleteCourse(courseId);
     res.sendStatus(204);
   };
 
-  const createModule = (req, res) => {
+  const createModule = async (req, res) => {
     const { courseId } = req.params;
     const module = {
       ...req.body,
       course: courseId,
     };
-    const newModule = modulesDao.createModule(module);
+    const newModule = await modulesDao.createModule(module);
     res.send(newModule);
   };
   
-  const findModulesForCourse = (req, res) => {
+  const findModulesForCourse = async (req, res) => {
     const { courseId } = req.params;
-    const modules = modulesDao.findModulesForCourse(courseId);
+    const modules = await modulesDao.findModulesForCourse(courseId);
     res.json(modules);
   };
 
-  const createAssignment = (req, res) => {
+  const createAssignment = async (req, res) => {
     const { courseId } = req.params;
     const assignment = {
       ...req.body,
       course: courseId,
     };
-    const newAssignment = assignmentsDao.createAssignment(assignment);
+    const newAssignment = await assignmentsDao.createAssignment(assignment);
     res.send(newAssignment);
   };
 
-  const findAssignmentsForCourse = (req, res) => {
+  const findAssignmentsForCourse = async (req, res) => {
     const { courseId } = req.params;
-    const assignments = assignmentsDao.findAssignmentsForCourse(courseId);
+    const assignments = await assignmentsDao.findAssignmentsForCourse(courseId);
     res.json(assignments);
   }
 
-  const enrollUserInCourse = (req, res) => {
+  const enrollUserInCourse = async (req, res) => {
     const currentUser = req.session["currentUser"];
     const { courseId } = req.body;
     if (currentUser && courseId) {
-      const enrollment = enrollmentsDao.enrollUserInCourse(currentUser._id, courseId);
+      const enrollment = await enrollmentsDao.enrollUserInCourse(currentUser._id, courseId);
       res.json(enrollment);
     } else {
       res.status(400).send("Invalid request data");
     }
   };
 
-  const unenrollUserInCourse = (req, res) => {
+  const unenrollUserInCourse = async (req, res) => {
     const currentUser = req.session["currentUser"];
     const { courseId } = req.body;
     if (currentUser && courseId) {
-      enrollmentsDao.unenrollUserInCourse(currentUser._id, courseId);
+      await enrollmentsDao.unenrollUserInCourse(currentUser._id, courseId);
       res.sendStatus(204);
     } else {
       res.status(400).send("Invalid request data");

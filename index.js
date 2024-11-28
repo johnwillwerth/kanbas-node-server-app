@@ -1,4 +1,6 @@
+import "dotenv/config";
 import express from 'express';
+import mongoose from 'mongoose';
 import Hello from "./Hello.js"; 
 import Lab5 from "./Lab5/index.js"; 
 import cors from "cors";
@@ -7,9 +9,10 @@ import CourseRoutes from "./Kanbas/Courses/routes.js";
 import ModuleRoutes from "./Kanbas/Modules/routes.js";
 import EnrollmentRoutes from "./Kanbas/Enrollments/routes.js";
 import AssignmentRoutes from "./Kanbas/Assignments/routes.js";
-import "dotenv/config";
 import session from 'express-session';                          // import new server session library
 
+const CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kanbas"
+mongoose.connect(CONNECTION_STRING);
 const app = express()                                           // create new express instance
 app.use(
   cors({                                                        // configure cors first
@@ -31,8 +34,17 @@ if (process.env.NODE_ENV !== "development") {                   // in production
   sessionOptions.cookie = {                                     // configure cookies for remote server
     sameSite: "none",
     secure: true,
+    domain: process.env.REMOTE_SERVER,
+  };
+{/*  
+if (process.env.NODE_ENV !== "development") {                   // in production
+  sessionOptions.proxy = true;                                  // turn on proxy support
+  sessionOptions.cookie = {                                     // configure cookies for remote server
+    sameSite: "none",
+    secure: true,
     domain: process.env.NODE_SERVER_DOMAIN,
   };
+  */} 
 }
 
 app.use(session(sessionOptions));
