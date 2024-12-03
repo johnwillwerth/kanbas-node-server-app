@@ -34,17 +34,8 @@ if (process.env.NODE_ENV !== "development") {                   // in production
   sessionOptions.cookie = {                                     // configure cookies for remote server
     sameSite: "none",
     secure: true,
-    domain: process.env.REMOTE_SERVER,
-  };
-{/*  
-if (process.env.NODE_ENV !== "development") {                   // in production
-  sessionOptions.proxy = true;                                  // turn on proxy support
-  sessionOptions.cookie = {                                     // configure cookies for remote server
-    sameSite: "none",
-    secure: true,
     domain: process.env.NODE_SERVER_DOMAIN,
   };
-  */} 
 }
 
 app.use(session(sessionOptions));
