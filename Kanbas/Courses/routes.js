@@ -101,7 +101,7 @@ export default function CourseRoutes(app) {
   app.get("/api/courses/:courseId/modules", findModulesForCourse);
   app.post("/api/courses/:courseId/assignments", createAssignment);
   app.get("/api/courses/:courseId/assignments", findAssignmentsForCourse);
-  app.put("/api/courses/:courseId/enrollments", enrollUserInCourse);
+  app.post("/api/courses/:courseId/enrollments", enrollUserInCourse);
   app.delete("/api/courses/:courseId/enrollments", unenrollUserInCourse);
   app.get("/api/courses/:cid/users", findUsersForCourse);
 }

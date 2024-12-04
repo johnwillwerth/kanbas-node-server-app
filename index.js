@@ -36,6 +36,15 @@ if (process.env.NODE_ENV !== "development") {                   // in production
     secure: true,
     domain: process.env.NODE_SERVER_DOMAIN,
   };
+{/*  
+if (process.env.NODE_ENV !== "development") {                   // in production
+  sessionOptions.proxy = true;                                  // turn on proxy support
+  sessionOptions.cookie = {                                     // configure cookies for remote server
+    sameSite: "none",
+    secure: true,
+    domain: process.env.NODE_SERVER_DOMAIN,
+  };
+  */} 
 }
 
 app.use(session(sessionOptions));
