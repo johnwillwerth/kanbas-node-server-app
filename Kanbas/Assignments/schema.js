@@ -6,8 +6,13 @@ const assignmentSchema = new mongoose.Schema(
    group: String,
    description: String,
    points: Number,
+   displayGradeAs: String,
+   submissionType: String,
+   entryOptions: String,
+   assignTo: String,
    availDate: Date,
    dueDate: Date,
+   availUntilDate: Date,
  },
  { collection: "assignments" }
 );

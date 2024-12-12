@@ -9,6 +9,7 @@ import CourseRoutes from "./Kanbas/Courses/routes.js";
 import ModuleRoutes from "./Kanbas/Modules/routes.js";
 import EnrollmentRoutes from "./Kanbas/Enrollments/routes.js";
 import AssignmentRoutes from "./Kanbas/Assignments/routes.js";
+import QuizRoutes from "./Kanbas/Quizzes/routes.js";
 import session from 'express-session';                          // import new server session library
 
 const CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kanbas"
@@ -34,7 +35,7 @@ if (process.env.NODE_ENV !== "development") {                   // in production
   sessionOptions.cookie = {                                     // configure cookies for remote server
     sameSite: "none",
     secure: true,
-    domain: process.env.NODE_SERVER_DOMAIN,
+    domain: process.env.REMOTE_SERVER,
   };
 {/*  
 if (process.env.NODE_ENV !== "development") {                   // in production
@@ -54,6 +55,7 @@ CourseRoutes(app);
 ModuleRoutes(app);
 EnrollmentRoutes(app);
 AssignmentRoutes(app);
+QuizRoutes(app);
 Lab5(app);                                                      // pass reference to express module
 Hello(app);                                                     // pass app reference to Hello
 

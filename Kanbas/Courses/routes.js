@@ -2,6 +2,8 @@ import * as dao from "./dao.js";
 import * as modulesDao from "../Modules/dao.js";
 import * as assignmentsDao from "../Assignments/dao.js";
 import * as enrollmentsDao from "../Enrollments/dao.js";
+import * as quizzesDao from "../Quizzes/dao.js";
+import * as questionsDao from "../Questions/dao.js";
 
 export default function CourseRoutes(app) {
   
@@ -63,7 +65,53 @@ export default function CourseRoutes(app) {
     const { courseId } = req.params;
     const assignments = await assignmentsDao.findAssignmentsForCourse(courseId);
     res.json(assignments);
-  }
+  };
+
+  const createQuiz = async (req, res) => {
+    const { courseId } = req.params;
+    const quiz = {
+      ...req.body,
+      course: courseId,
+    };
+    const newQuiz = await quizzesDao.createQuiz(quiz);
+    res.send(newQuiz);
+  };
+
+  const findQuizzesForCourse = async (req, res) => {
+    const { courseId } = req.params;
+    const quizzes = await quizzesDao.findQuizzesForCourse(courseId);
+    res.json(quizzes);
+  };
+
+  const createQuestion = async (req, res) => {
+    const { quizId } = req.params;
+    const question = {
+      ...req.body,
+      quiz: quizId,
+    };
+    const newQuestion = await questionsDao.createQuestion(question);
+    res.send(newQuestion);
+  };
+
+  const findQuestionsForQuiz = async (req, res) => {
+    const { quizId } = req.params;
+    const questions = await questionsDao.findQuestionsForQuiz(quizId);
+    res.json(questions);
+  };
+
+  // Fetch questions based on level of difficulty
+  const findQuestionsByDifficulty = async (req, res) => {
+    const { difficulty } = req.params;
+    const level = await questionsDao.findQuestionsByDifficulty(difficulty);
+    res.json(level);
+  };
+
+  // Fetch questions based on type (i.e. 'Multiple Choice')
+  const findQuestionsByType = async (req, res) => {
+    const { types } = req.params;
+    const type = await questionsDao.findQuestionsByType(types);
+    res.json(type);
+  };
 
   const enrollUserInCourse = async (req, res) => {
     const currentUser = req.session["currentUser"];
@@ -101,6 +149,12 @@ export default function CourseRoutes(app) {
   app.get("/api/courses/:courseId/modules", findModulesForCourse);
   app.post("/api/courses/:courseId/assignments", createAssignment);
   app.get("/api/courses/:courseId/assignments", findAssignmentsForCourse);
+  app.post("/api/courses/:courseId/quizzes", createQuiz);
+  app.get("/api/courses/:courseId/quizzes", findQuizzesForCourse);
+  app.post("/api/courses/:courseId/quizzes/:quizId/questions", createQuestion);
+  app.get("/api/courses/:courseId/quizzes/:quizId/questions", findQuestionsForQuiz);
+  app.get("/api/courses/:courseId/quizzes/:quizId/questions/:difficulty", findQuestionsByDifficulty);
+  app.get("/api/courses/:courseId/quizzes/:quizId/questions/:type", findQuestionsByType);
   app.post("/api/courses/:courseId/enrollments", enrollUserInCourse);
   app.delete("/api/courses/:courseId/enrollments", unenrollUserInCourse);
   app.get("/api/courses/:cid/users", findUsersForCourse);
