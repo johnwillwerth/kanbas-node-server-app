@@ -35,7 +35,7 @@ if (process.env.NODE_ENV !== "development") {                   // in production
   sessionOptions.cookie = {                                     // configure cookies for remote server
     sameSite: "none",
     secure: true,
-    domain: process.env.REMOTE_SERVER,
+    domain: process.env.NODE_SERVER_DOMAIN,
   };
 {/*  
 if (process.env.NODE_ENV !== "development") {                   // in production
