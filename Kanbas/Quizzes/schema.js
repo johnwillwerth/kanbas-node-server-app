@@ -75,6 +75,12 @@ const quizSchema = new mongoose.Schema(
       enum: [true, false],
       default: false,
     },
+
+    published: {
+      type: Boolean,
+      enum: [true, false],
+      default: false,
+    },
     
     dueDate: Date,
     availDate: Date,

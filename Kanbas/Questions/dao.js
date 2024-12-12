@@ -23,10 +23,10 @@ export function createQuestion(question) {
 
 // Update an existing question
 export function updateQuestion(questionId, questionUpdates) {
-  return model.findByIdAndUpdate(questionId, questionUpdates, { new: true });
+  return model.updateOne(questionId, questionUpdates);
 };
 
 // Delete a question
 export function deleteQuestion(questionId) {
-  return model.findByIdAndDelete({ _id: questionId });
+  return model.deleteOne({ _id: questionId });
 };
